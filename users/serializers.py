@@ -14,13 +14,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         write_only = True,
         # required = True,        
         validators = [validate_password],
-        style = {"input-type": "password"}
+        style = {"input_type": "password"}
     )
     password2 = serializers.CharField(
         write_only = True,
         required = True,        
         validators = [validate_password],
-        style = {"input-type": "password"}
+        style = {"input_type": "password"}
     )
     
     class Meta:
@@ -43,7 +43,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
     
     def validate(self, data):
-        if data["password"] != data["password2"]
+        if data["password"] != data["password2"]:
             raise serializers.ValidationError(
                 {"password":"Password didn't match..."}
             )
