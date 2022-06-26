@@ -180,6 +180,9 @@ REST_FRAMEWORK = {
 23-http://127.0.0.1:8000/users/auth/register/ linke gidip bir test user oluşturuyoruz.
 24-http://127.0.0.1:8000/users/auth/login/ linke gidip oluşturduğumuz user bilgileri ile login oluyoruz.
 25-http://127.0.0.1:8000/users/auth/logout/ linke gidip post tıklayınca detail:succesfully  yazması gerekir default
-26-
+26-djangoda modellerde modelde bir obje create ettiğimiz zaman bu obje create olmadan önce ve sonra bazı sinyaller gönderir
+bu sinyalleri yakaladığımız zaman projeye göre kullanmaya yarıyor.
+27-users create olunca bana bir token üret demek için create sinyalini yakalamak gibi burada Token rest framewrokun token modeli içerisinde token üretiriz bu projede
+28- 
 
 
