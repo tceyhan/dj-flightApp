@@ -1,0 +1,168 @@
+1-env kuruldu
+2-env active edildi
+3-pip instal djangorestframework açıklama =>(pip install django demeye gerek yok çünkü sadece rest-framework kullanılacak projede-django kurulmuş oluyor)
+4-python.exe -m pip install --upgrade pip açıklama => (pip update edildi)
+5-pip freeze > requirements.txt  açıklama => yüklediğim dosyaları txt dosyasına atarak  başka developer ların ne yapması gerektiğini anlamasına yardımcı oluyoruz, yada projede ne kullandığımıza hatırlıyoruz sonradan.
+6- django-admin startproject main . ( proje ismi main olarak konuldu)
+7-INSTALLED_APPS 'e "rest_framework" olarak eklendi(Not:burda liste elemanları olduğu için virgüllere dikkat etmek gerekiyor!)
+8-py manage.py runserver yaparak server'ı çalıştırıyoruz ve roketi görüyoruz browser'da.
+9-BRD document inceleme(product backlog)
+10-ERD hazırlama (Entity relational Database) (drawsql.app linkinden hazırlanır)
+11-pip install python-decouple yükledik(secret_key i .env dosyasına atmak için => "from decouple import config" settings.py da import ediyoruz)
+12-"git init"(repository başlatma)
+13-"git status"(eklediğimiz dosyaları kırmızı renkte görürüz)
+14-"git add ." (hepsini birden göndermek için nokta koyuyoruz ancak sadece bir dosya göndermek isteseydik o dosyanın ismini yazardık)
+15-git restore <file> yaparak  unstage yaptığımız file  tamamen geri çekmiş oluruz.
+16-"git commit -m 'initial commit'" (50 karakter sınırı var başlık için-anlamlı bir commit yazmak önemli-hangi feature eklediysek onu yazmak best practise)
+17-github ta repo oluşturuyoruz.
+18-branch main dönüştürmemizi istiyor github (çünkü master köleliği çağrıştırdığı için etik anlamı var)
+19-"git branch -M main" kodu ile master olan branchname main olur. vscode sol altta görebilirsin.
+20-"git remote add origin https://github.com/tceyhan/dj-DRF_Template.git"  ile localim ile repom arasında bağlantı kurmuş oluyorum.Push ettiğimde artık nereye gideceğini biliyor dosyalarım.
+21-"git push --set-upstream origin main" veya "git push -u origin main" ile push ederiz.
+22-developerların  dokümantasyonu ve  API dizayn etmesini kolaylaştırmaya yaryan swagger eklenir.
+23-https://drf-yasg.readthedocs.io/en/stable/readme.html swagger document.
+24-"pip install drf-yasg"  ile swagger ekle
+25-INSTALLED_APPS 'e 'drf_yasg' şeklinde eklendi.
+26-
+"""başlagıç projedeki urls.py kısmı aşağıdaki gibi olacak"""
+from django.contrib import admin
+from django.urls import path
+
+# Three modules for swagger:
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Flight Reservation API",
+        default_version="v1",
+        description="Flight Reservation API project provides flight and reservation info",
+        terms_of_service="#",
+        contact=openapi.Contact(email="55tc155@gmail.com"),  # Change e-mail on this line!
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
+
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+
+    # Url paths for swagger:
+    path("swagger(<format>\.json|\.yaml)", schema_view.without_ui(cache_timeout=0), name="schema-json"),
+    path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+]
+"""bitti"""
+27-py manage.py runserver yapıp => http://127.0.0.1:8000/swagger/ bu şekilde kontrol edebiliriz.
+28-swagger bize dökümanı hazırlamamızı ve güncel tutmamızı sağlıyor, küçük testler sağlıyor request, response vb.,
+planlama açısından projeyi özetliyor bir nevi.
+29-"pip install django-debug-toolbar" ile hata ayıklama için toolbar ekliyoruz
+30-INSTALLED_APPS'e "debug_toolbar",  ekliyoruz.
+31-middleware kısmında "debug_toolbar.middleware.DebugToolbarMiddleware", eklenir.
+32-urls.py'da include import ederek "path('__debug__/', include('debug_toolbar.urls')), " ekliyoruz,
+33-settings.py en sona ekliyoruz :
+"""başlangıç"""
+INTERNAL_IPS = [ 
+    "127.0.0.1", 
+]
+"""bitiş"""
+
+34-settings.py parçalıyoruz main içerisinde klasör açarak base.py, dev.py, prod.py olarak ayırıyoruz.amaç kullanıcının bütün ayarlarımızı görmemesi.
+35-"pip install psycopg2" ile postgresql yüklüyoruz
+36-.env dosyasında ve prod.py dosyasındaki Database ile ilgili kısımları dolduruyoruz.
+37-init.py içerisinde logic oluşturup çalıştığımız ortama göre yüklenecek settings dosyalarının importunu ayarlıyoruz.
+"""init.py içerisi"""
+from .base import *
+
+env_name = config("ENV_NAME")
+
+if env_name == 'dev':
+    from .dev import *
+elif env_name == 'prod':
+    from .prod import *
+"""bitiş"""
+
+38-
+"""prod.py  içerisi"""
+
+from .base import *
+
+DATABASES = { 
+    "default": { 
+        "ENGINE": "django.db.backends.postgresql_psycopg2", 
+        "NAME": config("SQL_DATABASE"), 
+        "USER": config("SQL_USER"), 
+        "PASSWORD": config("SQL_PASSWORD"), 
+        "HOST": config("SQL_HOST"), 
+        "PORT": config("SQL_PORT"), 
+        "ATOMIC_REQUESTS": True, 
+    }
+}
+
+"""bitiş"""
+
+39-
+"""dev.py içerisindeki databse ayarı"""
+
+# Database
+# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+"""bitiş"""
+
+40-database ayarları yaptıktan sonra pgadmin açarak yeni bir database oluşturuyoruz.
+41-python manage.py migrate yaparak db eşleştiriliyor.
+42-https://docs.djangoproject.com/en/4.0/topics/logging/ sayfasında izeh edildiği gibi logging ayarlıyoruz base.py altında yer alıyor.
+43-console da yada debug.log gibi bir dosya içerisinde gelen log ların gösterimini ayarlanmasında kullanılır.
+
+
+**********base proje girişi(above) üzerine devam edilecek kısım******************
+
+1-"python manage.py startapp users" app oluşturuldu.
+2-base.py kısmında INSTALLED_APPS'e eklendi.
+3-https://www.django-rest-framework.org/api-guide/authentication/#third-party-packages bu linkte authentication paketleri mevcut
+4-django-rest-auth / dj-rest-auth  bu projede kullandım.(link: https://github.com/iMerica/dj-rest-auth)
+5-dökümantasyon linki: https://dj-rest-auth.readthedocs.io/en/latest/index.html
+6-dökümanda intallation kısmında step by step takip edildi.
+7-"pip install dj-rest-auth" ile paketi yükle.
+8-INSTALLED_APPS'e installation kısmında belirtilern appler eklendi ve authtoken app'i admin sayfasında görülüceği üzere tokens diye bir alan oluşturduğu için
+    migrate yapmamız gereklidir.
+9-"py manage.py migrate" ile tokens db ye entegre edilir.
+10-users app de urls.py oluştur.
+11-"""users.urls.py içeriği"""
+
+from django.urls import path, include
+
+urlpatterns = [    
+    path('auth/', include('dj_rest_auth.urls'))
+]
+
+"""bitiş"""
+
+12-main ana projesinde urls.py da 
+"""main.urls.py eklenen kısım"""
+
+path("users/", include("users.urls")), 
+
+"""bitiş"""
+
+13-runserver yapıp http://127.0.0.1:8000/users/auth/ baktığımızda login, logout, password change kısımlarını yapılacak.
+14-password reset ve password confirm frontend ile beraber yapılması daha mantıklı.(demo proje linki https://dj-rest-auth.readthedocs.io/en/latest/demo.html bu linte nasıl yapılacağı anlatılmış)
+15-http://127.0.0.1:8000/users/auth/login ile  baktığımızda hem username hemde mail ile giriş yapılma imkanı veriyor
+post dediğimizde key olarak token gösterir.
+16-dökümantasyon incelendiğinde social login kısmıda var sonradan eklenebilir.
+17-users app de serializer.py dosyası oluştur.
+18-"from rest_framework import serializers" import edilir.
+19-
+
+
