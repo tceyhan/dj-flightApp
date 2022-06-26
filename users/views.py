@@ -16,6 +16,7 @@ class RegisterView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         data = serializer.data
+        #! signals çalışıp çalışmadığını kontrol için koşul yazıldı.
         if Token.objects.filter(user=user).exists():
             token = Token.objects.get(user=user).key
             data["token"] = token
