@@ -163,6 +163,8 @@ post dediğimizde key olarak token gösterir.
 16-dökümantasyon incelendiğinde social login kısmıda var sonradan eklenebilir.
 17-users app de serializer.py dosyası oluştur.
 18-"from rest_framework import serializers" import edilir.
-19-
+19-RegisterSerializer oluşturuldu.
+20-RegisterView oluşturuldu.(bize gelen datayı db ye kaydetmesi yada gönderdiğimiz datayı frontende göndermek için yazılır)
+21-
 
 
