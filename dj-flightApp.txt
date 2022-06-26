@@ -183,6 +183,13 @@ REST_FRAMEWORK = {
 26-djangoda modellerde modelde bir obje create ettiğimiz zaman bu obje create olmadan önce ve sonra bazı sinyaller gönderir
 bu sinyalleri yakaladığımız zaman projeye göre kullanmaya yarıyor.
 27-users create olunca bana bir token üret demek için create sinyalini yakalamak gibi burada Token rest framewrokun token modeli içerisinde token üretiriz bu projede
-28- 
+28- apps.py içerisinde eklemezsek bu kısmı signals.py kısmı çalışmaz.
+"""başlangıç"""
 
+   def ready(self):
+        import users.signals
+        
+"""bitiş"""
+
+29-
 
