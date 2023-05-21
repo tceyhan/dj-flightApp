@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
 
+# flight_app router
+from rest_framework import routers
+from flight_app import views
+
 # Three modules for swagger:
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -20,6 +24,9 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
+#flight_app for router MVS
+router = routers.DefaultRouter()
+router.register(r'flights', views.FlightViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -33,5 +40,9 @@ urlpatterns = [
     path('__debug__/', include('debug_toolbar.urls')),
     
     # apps
-    path("users/", include("users.urls")), 
+    path("users/", include("users.urls")),
+    path('api/', include(router.urls)),
+ 
 ]
+
+

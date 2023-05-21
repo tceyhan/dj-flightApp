@@ -1,9 +1,12 @@
 #?user modelinden sinyali yakalamak için import ediyoruz.sinyali bu model gönderecek
 from django.contrib.auth.models import User
+
 #? post_save pre_save vb birkaç metot var
 from django.db.models.signals import post_save
+
 #! receiver decorator ile sinyali yakalarız.
 from django.dispatch import receiver
+
 #? token modeli oluşturacağımız token yeri
 from rest_framework.authtoken.models import Token
 
